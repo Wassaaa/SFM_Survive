@@ -24,12 +24,15 @@ void Vampire::update(float deltaTime)
 
     Player* pPlayer = m_pGame->getPlayer();
 
-    if (collidesWith(&pPlayer->getWeapon()))
-    {
-        setIsKilled(true);
-        return;
-    }
-
+    for (auto &weapon : pPlayer->getWeapon())
+	{
+        if (collidesWith(&weapon))
+        {
+            setIsKilled(true);
+            m_pGame->addKill();
+            return;
+        }
+	}
     if (collidesWith(pPlayer))
         pPlayer->setIsDead(true);
 

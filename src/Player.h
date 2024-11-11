@@ -27,14 +27,12 @@ public:
 	//movement
 	void move(const float dir_x, const float dir_y);
 	void move(InputData inputData);
-	void updateSpriteFacing();
 	EntState determineState();
 	//weapons
 	void addWeapon(EntityType type);
 	//getters
 	const bool isDead() const { return m_isDead; }
-	//temporary
-	Weapon &getWeapon() { return weapons.at(0); }
+	std::vector<Weapon> &getWeapon() { return weapons; }
 
 	//setters
 	void setIsDead(bool isDead) { m_isDead = isDead; }
@@ -43,6 +41,7 @@ private:
 	sf::Texture textureSheet;
 	AnimComponent animations;
 	const EntityData *config;
+	Game* m_pGame;
 
 	//weapons
 	std::vector<Weapon> weapons;

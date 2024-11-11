@@ -3,6 +3,7 @@
 Player::Player(Game *pGame) :
 	Rectangle(EntityManager::getInstance().getEntityData(EntityType::PLAYER).hitboxSize),
 	config(&EntityManager::getInstance().getEntityData(EntityType::PLAYER)),
+	m_pGame(pGame),
 	animations(m_sprite)
 {
 	this->initVariables();
@@ -17,6 +18,7 @@ Player::~Player()
 
 bool Player::initialise()
 {
+	weapons.clear();
 	this->initVariables();
 	this->initSprite();
 	this->initPhysics();
@@ -32,7 +34,7 @@ void Player::update(float &dt)
 	this->updateAnim(dt);
 	for (auto &weapon : this->weapons)
 	{
-		weapon.update(dt, this->getPosition());
+		weapon.update(dt, this->getPosition(), m_pGame);
 	}
 }
 
@@ -48,7 +50,6 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void Player::updateMovement()
 {
 	EntState newState = this->determineState();
-	this->updateSpriteFacing();
 	if (newState != currentState)
 	{
 		currentState = newState;
@@ -128,20 +129,6 @@ void Player::move(InputData inputData)
 	if (inputData.m_movingUp) dir_y -= 1.f;
 	if (inputData.m_movingDown) dir_y += 1.f;
 	this->move(dir_x, dir_y);
-}
-
-void Player::updateSpriteFacing()
-{
-	// if (velocity.x > 0.f)
-	// {
-	// 	this->sprite.setOrigin({0, 0});
-	// 	this->sprite.setScale(this->scale, this->scale);
-	// }
-	// else if (velocity.x < 0.f)
-	// {
-	// 	this->sprite.setOrigin({this->sprite.getGlobalBounds().width / this->scale, 0});
-	// 	this->sprite.setScale(-this->scale, this->scale);
-	// }
 }
 
 EntState Player::determineState()

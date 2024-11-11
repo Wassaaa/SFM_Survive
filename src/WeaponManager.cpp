@@ -5,8 +5,10 @@ void WeaponManager::loadWeaponData() {
 	{
 		WeaponData& laser = weaponData[EntityType::LASER_WEAPON];
 		laser.baseDamage = 8.f;
-		laser.baseSpeed = 0.15f;
-		laser.baseRange = 400.f;
+		laser.baseSpeed = 100.f;
+		laser.speedInterval = 5.f;
+		laser.baseRange = 95.f;
+		laser.rangeInterval = {.1f, 0.f};
 		laser.baseRadius = 5.f;
 		laser.baseCritChance = 0.05f;
 		laser.baseCritDamage = 1.5f;

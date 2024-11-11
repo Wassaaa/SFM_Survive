@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "RectangularBoundaryCollision.hpp"
 
-bool Rectangle::s_debugDraw = true;
+bool Rectangle::s_debugDraw = false;
 
 Rectangle::Rectangle(sf::Vector2f size, sf::Vector2f position) :
     m_size(size),

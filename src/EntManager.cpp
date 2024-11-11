@@ -11,9 +11,9 @@ void EntityManager::loadEntityData()
 		player.spriteOrigin = {50.f, 50.f};
 		player.spriteRotation = 0.f;
 		player.spriteOffset = {0.f, 0.f};
-		player.hitboxSize = {100.f, 100.f};
+		player.hitboxSize = {50.f, 55.f};
 		player.hitboxScale = {1.f, 1.f};
-		player.hitboxOrigin = {50.f, 50.f};
+		player.hitboxOrigin = {25.f, 30.f};
 		player.hitboxOffset = {0.f, 0.f};
 		player.debugColor = sf::Color(0, 255, 0, 128);
 
@@ -43,19 +43,20 @@ void EntityManager::loadEntityData()
 	// Laser weapon configuration
 	{
 		EntityData& laser = entityData[EntityType::LASER_WEAPON];
-		laser.texturePath = "laser.png";
-		laser.frameSize = {62.f, 66.f};
-		laser.spriteScale = {1.f, 1.f};
-		laser.spriteOrigin = {0.f, 66.f};
+		laser.texturePath = "waveform2.png";
+		laser.frameSize = {95.f, 32.f};
+		laser.spriteScale = {1.0f, 1.0f};
+		laser.spriteOrigin = {0.f, 15.f};
 		laser.spriteOffset = {0.f, 0.f};
-		laser.hitboxSize = {62.f, 10.f};
-		laser.hitboxOrigin = {0.f, 5.f};
+		laser.hitboxSize = {95.f, 32.f};
+		laser.hitboxOrigin = {0.f, 15.f};
 		laser.hitboxOffset = {0.f, 0.f};
+		laser.hitboxRotation = 0.f;
 		laser.debugColor = sf::Color(255, 0, 0, 128);
 		laser.animations[EntState::WEAPON_1] =
 		{
-			"laser.png",
-			{62, 66},		//frameSize
+			"waveform2.png",
+			{95, 32},		//frameSize
 			{0, 0},			//startPos
 			1,				//frameCount
 			sf::milliseconds(100),

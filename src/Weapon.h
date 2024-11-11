@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "Game.h"
 #include "Rectangle.h"
 #include "AnimComponent.h"
 #include "WeaponManager.h"
@@ -16,7 +17,7 @@ public:
 	Weapon(EntityType type);
 	~Weapon();
 
-	void update(float& dt, sf::Vector2f playerPos);
+	void update(float& dt, sf::Vector2f playerPos, Game *pGame);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	// Getters
@@ -25,7 +26,10 @@ public:
 	float getCritChance() const { return this->currentCritChance; }
 	float getCritDamage() const { return this->currentCritDamage; }
 	float getCurrentRange() const { return this->currentRange; }
+	const EntityType getType() const { return this->type; }
 
+	void addSpeed();
+	void addRange();
 	void initStats();
 	void initSprite();
 	void initAnim();
@@ -35,6 +39,9 @@ private:
 	const WeaponData *data;
 	const EntityData *config;
 	AnimComponent animations;
+
+	void getUpgrades(Game *pGame);
+	int lastUpgrade;
 
 	// Base stats
 	float currentDamage;

@@ -19,7 +19,6 @@ Game::Game() :
     m_nextVampireCooldown(2.0f)
 {
     m_pGameInput = std::make_unique<GameInput>(this, m_pPlayer.get());
-    m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
 }
 
 Game::~Game()
@@ -59,6 +58,7 @@ void Game::resetLevel()
 
     m_pPlayer->initialise();
     m_pClock->restart();
+    this->score = 0;
 }
 
 void Game::update(float deltaTime)
@@ -71,12 +71,21 @@ void Game::update(float deltaTime)
             {
                 m_state = State::ACTIVE;
                 m_pClock->restart();
+                m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
             }
         }
         break;
 
         case State::ACTIVE:
         {
+            if (this->score == 10 || this->score == 20)
+            {
+                if (this->extraWeapon)
+                    m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
+                this->extraWeapon = false;
+            }
+            else
+                this->extraWeapon = true;
             m_pGameInput->update(deltaTime);
             m_pPlayer->update(deltaTime);
 
@@ -127,7 +136,8 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
         timerText.setFont(m_font);
         timerText.setFillColor(sf::Color::White);
         timerText.setStyle(sf::Text::Bold);
-        timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds()));
+        timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds()) +
+                            "\nSCORE: " + std::to_string(this->score));
         timerText.setPosition(sf::Vector2f((ScreenWidth - timerText.getLocalBounds().getSize().x) * 0.5, 20));
         target.draw(timerText);
     }
@@ -189,4 +199,17 @@ void Game::vampireSpawner(float deltaTime)
         m_nextVampireCooldown -= 0.1f;
     }
     m_vampireCooldown = m_nextVampireCooldown;
+}
+
+void Game::addKill()
+{
+    this->score++;
+    if (this->score % 2 == 0)
+    {
+        for (auto& weapon : m_pPlayer->getWeapon())
+        {
+            if (weapon.getType() == EntityType::LASER_WEAPON)
+                weapon.addSpeed();
+        }
+    }
 }

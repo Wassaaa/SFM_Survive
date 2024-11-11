@@ -33,10 +33,13 @@ public:
     void onKeyReleased(sf::Keyboard::Key key);
 
     Player* getPlayer() const;
+    const int getScore() const { return this->score; }
+
     sf::Texture* getPlayerTexture() { return &m_playerTexture; }
     sf::Texture* getVampireTexture() { return &m_vampTexture; }
 
     void vampireSpawner(float deltaTime);
+    void addKill();
 
 private:
     std::unique_ptr<Player> m_pPlayer;
@@ -50,6 +53,8 @@ private:
     float m_vampireCooldown = 0.0f;
     float m_nextVampireCooldown = 2.0f;
     int m_spawnCount = 0;
+    int score;
+    bool extraWeapon = true;
 
     sf::Font m_font;
     sf::Texture m_vampTexture;

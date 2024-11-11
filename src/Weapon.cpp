@@ -10,28 +10,39 @@ Weapon::Weapon(EntityType type):
 	this->initSprite();
 	this->initAnim();
 	this->initStats();
+	this->lastUpgrade = 0;
 }
 
 Weapon::~Weapon()
 {
 }
 
-void Weapon::update(float &dt, sf::Vector2f playerPos)
+void Weapon::update(float &dt, sf::Vector2f playerPos, Game *pGame)
 {
-	setPosition(playerPos + this->config->hitboxOffset);
-	//temp
-	rotate(100.f * dt);
+	this->getUpgrades(pGame);
+	setPosition(playerPos);
+	rotate(this->currentSpeed * dt);
 
 	setPosition(getPosition());
 	setRotation(getRotation());
-	// m_sprite.setPosition(getPosition());
-	// m_sprite.setRotation(getRotation());
 	this->animations.update(dt);
 }
 
 void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	Rectangle::draw(target, states);
+}
+
+void Weapon::addSpeed()
+{
+	this->currentSpeed += this->data->speedInterval;
+	std::cout << "Weapon Speed increased\n";
+}
+
+void Weapon::addRange()
+{
+	setScale(getScale() + this->data->rangeInterval);
+	std::cout << "Weapon Range increased\n";
 }
 
 void Weapon::initStats()
@@ -47,12 +58,22 @@ void Weapon::initSprite()
 {
 	setOrigin(config->spriteOrigin);
 	setRotation(config->hitboxRotation);
-	m_sprite.setOrigin(config->spriteOrigin);
-	m_sprite.setRotation(config->spriteRotation);
+	setScale(config->spriteScale);
 }
 
 void Weapon::initAnim()
 {
 	this->animations.loadTexture(config->texturePath);
 	this->animations.addAnim(config->animations);
+}
+
+void Weapon::getUpgrades(Game *pGame)
+{
+	if (this->lastUpgrade == pGame->getScore())
+		return;
+	this->lastUpgrade = pGame->getScore();
+	if (pGame->getScore() % 2)
+		addSpeed();
+	if (pGame->getScore() % 3)
+		addRange();
 }
