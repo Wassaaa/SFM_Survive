@@ -32,6 +32,7 @@ void Player::update(float &dt)
 	this->updatePhysics();
 	this->updateSprite();
 	this->updateAnim(dt);
+	sf::Transformable::move(this->velocity * dt);
 	for (auto &weapon : this->weapons)
 	{
 		weapon.update(dt, this->getPosition(), m_pGame);
@@ -97,7 +98,6 @@ void Player::updatePhysics()
 		this->velocity.x = 0.f;
 	if (std::abs(this->velocity.y) < this->velocityMin)
 		this->velocity.y = 0.f;
-	sf::Transformable::move(this->velocity);
 
 	setPosition(
 		std::clamp(getPosition().x, 0.0f, (float)ScreenWidth),
@@ -177,9 +177,9 @@ void Player::initAnim()
 
 void Player::initPhysics()
 {
-	this->velocityMax = 10.f;
+	this->velocityMax = 400.f;
 	this->velocityMin = .1f;
-	this->acceleration = 1.f;
+	this->acceleration = 100.f;
 	this->drag = 0.72f;
 	this->velocity = {0.f, 0.f};
 }

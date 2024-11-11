@@ -47,6 +47,11 @@ bool Game::initialise()
         std::cerr << "Unable to load texture" << std::endl;
         return false;
     }
+    if (!m_weaponTexture.loadFromFile(ResourceManager::getFilePath("waveform2.png")))
+    {
+        std::cerr << "Unable to load texture" << std::endl;
+        return false;
+    }
 
     resetLevel();
     return true;
@@ -78,14 +83,6 @@ void Game::update(float deltaTime)
 
         case State::ACTIVE:
         {
-            if (this->score == 10 || this->score == 20)
-            {
-                if (this->extraWeapon)
-                    m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
-                this->extraWeapon = false;
-            }
-            else
-                this->extraWeapon = true;
             m_pGameInput->update(deltaTime);
             m_pPlayer->update(deltaTime);
 

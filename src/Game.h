@@ -37,6 +37,7 @@ public:
 
     sf::Texture* getPlayerTexture() { return &m_playerTexture; }
     sf::Texture* getVampireTexture() { return &m_vampTexture; }
+    sf::Texture* getWeaponTexture() { return &m_vampTexture; }
 
     void vampireSpawner(float deltaTime);
     void addKill();
@@ -59,4 +60,5 @@ private:
     sf::Font m_font;
     sf::Texture m_vampTexture;
     sf::Texture m_playerTexture;
+    sf::Texture m_weaponTexture;
 };
