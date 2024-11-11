@@ -39,8 +39,10 @@ void Player::update(float &dt)
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	Rectangle::draw(target, states);
-	//temp
-	weapons.at(0).draw(target, states);
+	for (auto& weapon : weapons)
+	{
+		weapon.draw(target, states);
+	}
 }
 
 void Player::updateMovement()

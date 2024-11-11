@@ -37,5 +37,5 @@ void Vampire::update(float deltaTime)
     sf::Vector2f direction = VecNormalized(playerCenter - getCenter());
     direction *= VampireSpeed * deltaTime;
     sf::Transformable::move(direction);
-    m_sprite.setPosition(getPosition());
+    setPosition(getPosition());
 }

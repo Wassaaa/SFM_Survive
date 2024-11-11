@@ -22,8 +22,10 @@ void Weapon::update(float &dt, sf::Vector2f playerPos)
 	//temp
 	rotate(100.f * dt);
 
-	m_sprite.setPosition(getPosition());
-	m_sprite.setRotation(getRotation());
+	setPosition(getPosition());
+	setRotation(getRotation());
+	// m_sprite.setPosition(getPosition());
+	// m_sprite.setRotation(getRotation());
 	this->animations.update(dt);
 }
 
