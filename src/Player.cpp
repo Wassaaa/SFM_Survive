@@ -35,7 +35,7 @@ void Player::update(float &dt)
 	sf::Transformable::move(this->velocity * dt);
 	for (auto &weapon : this->weapons)
 	{
-		weapon.update(dt, this->getPosition(), m_pGame);
+		weapon->update(dt, this->getPosition(), m_pGame);
 	}
 }
 
@@ -44,7 +44,7 @@ void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
 	Rectangle::draw(target, states);
 	for (auto& weapon : weapons)
 	{
-		weapon.draw(target, states);
+		weapon->draw(target, states);
 	}
 }
 
@@ -146,7 +146,7 @@ EntState Player::determineState()
 
 void Player::addWeapon(EntityType type)
 {
-	this->weapons.emplace_back(type);
+	this->weapons.emplace_back(std::make_unique<Weapon>(type));
 }
 
 void Player::initVariables()

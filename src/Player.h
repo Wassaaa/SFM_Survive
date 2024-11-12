@@ -32,7 +32,7 @@ public:
 	void addWeapon(EntityType type);
 	//getters
 	const bool isDead() const { return m_isDead; }
-	std::vector<Weapon> &getWeapon() { return weapons; }
+	std::vector<std::unique_ptr<Weapon>> &getWeapon() { return weapons; }
 
 	//setters
 	void setIsDead(bool isDead) { m_isDead = isDead; }
@@ -44,7 +44,8 @@ private:
 	Game* m_pGame;
 
 	//weapons
-	std::vector<Weapon> weapons;
+	// std::vector<Weapon> weapons;
+	std::vector<std::unique_ptr<Weapon>> weapons;
 
 	//variables
 	sf::Vector2f playerOrigin;

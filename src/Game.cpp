@@ -64,6 +64,7 @@ void Game::resetLevel()
     m_pPlayer->initialise();
     m_pClock->restart();
     this->score = 0;
+    this->extraWeapon = true;
 }
 
 void Game::update(float deltaTime)
@@ -96,6 +97,11 @@ void Game::update(float deltaTime)
             {
                 m_state = State::WAITING;
                 resetLevel();
+            }
+            if (m_pClock->getElapsedTime().asSeconds() >= 5.f && this->extraWeapon)
+            {
+                m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
+                this->extraWeapon = false;
             }
         }
         break;
@@ -173,27 +179,36 @@ void Game::vampireSpawner(float deltaTime)
         return;
     }
 
-    float randomXPos = rand() % ScreenWidth;
-    float randomYPos = rand() % ScreenHeight;
+    for (int i = 0; i < vampiresPerFrame; ++i)
+    {
+        float randomXPos = rand() % ScreenWidth;
+        float randomYPos = rand() % ScreenHeight;
 
-    float distToRight = (float) ScreenWidth - randomXPos;
-    float distToBottom = (float) ScreenHeight - randomYPos;
+        float distToRight = (float) ScreenWidth - randomXPos;
+        float distToBottom = (float) ScreenHeight - randomYPos;
 
-    float xMinDist = randomXPos < distToRight ? -randomXPos : distToRight;
-    float yMinDist = randomYPos < distToBottom ? -randomYPos : distToBottom;
+        float xMinDist = randomXPos < distToRight ? -randomXPos : distToRight;
+        float yMinDist = randomYPos < distToBottom ? -randomYPos : distToBottom;
 
-    if (abs(xMinDist) < abs(yMinDist))
-        randomXPos += xMinDist;
-    else
-        randomYPos += yMinDist;
+        if (abs(xMinDist) < abs(yMinDist))
+            randomXPos += xMinDist;
+        else
+            randomYPos += yMinDist;
 
-    sf::Vector2f spawnPosition = sf::Vector2f(randomXPos, randomYPos);
-    m_pVampires.push_back(std::make_unique<Vampire>(this, spawnPosition));
+        sf::Vector2f spawnPosition = sf::Vector2f(randomXPos, randomYPos);
+        m_pVampires.push_back(std::make_unique<Vampire>(this, spawnPosition));
+    }
 
+    std::cout << "Spawned " << vampiresPerFrame << " vampires." << std::endl;
     m_spawnCount++;
     if (m_spawnCount % 5 == 0)
     {
         m_nextVampireCooldown -= 0.1f;
+        if (m_nextVampireCooldown <= 0.0f)
+        {
+            m_nextVampireCooldown = 0.0f;
+            vampiresPerFrame++;
+        }
     }
     m_vampireCooldown = m_nextVampireCooldown;
 }
@@ -205,8 +220,8 @@ void Game::addKill()
     {
         for (auto& weapon : m_pPlayer->getWeapon())
         {
-            if (weapon.getType() == EntityType::LASER_WEAPON)
-                weapon.addSpeed();
+            if (weapon->getType() == EntityType::LASER_WEAPON)
+                weapon->addSpeed();
         }
     }
 }

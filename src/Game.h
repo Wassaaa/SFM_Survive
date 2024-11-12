@@ -37,7 +37,7 @@ public:
 
     sf::Texture* getPlayerTexture() { return &m_playerTexture; }
     sf::Texture* getVampireTexture() { return &m_vampTexture; }
-    sf::Texture* getWeaponTexture() { return &m_vampTexture; }
+    sf::Texture* getWeaponTexture() { return &m_weaponTexture; }
 
     void vampireSpawner(float deltaTime);
     void addKill();
@@ -56,6 +56,7 @@ private:
     int m_spawnCount = 0;
     int score;
     bool extraWeapon = true;
+    int vampiresPerFrame = 1;
 
     sf::Font m_font;
     sf::Texture m_vampTexture;

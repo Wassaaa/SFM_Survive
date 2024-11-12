@@ -26,7 +26,7 @@ void Vampire::update(float deltaTime)
 
     for (auto &weapon : pPlayer->getWeapon())
 	{
-        if (collidesWith(&weapon))
+        if (collidesWith(weapon.get()))
         {
             setIsKilled(true);
             m_pGame->addKill();
