@@ -38,16 +38,10 @@ void CollisionComponent::applyTransforms()
 
 bool CollisionComponent::intersects(const CollisionComponent& other) const
 {
-	sf::Transform thisTransform = getTransform();
-	sf::Transform otherTransform = other.getTransform();
-
-	sf::FloatRect thisBounds = thisTransform.transformRect(m_shape.getLocalBounds());
-	sf::FloatRect otherBounds = otherTransform.transformRect(other.m_shape.getLocalBounds());
-
-	return thisBounds.intersects(otherBounds);
+	return this->getBounds().intersects(other.getBounds());
 }
 
 sf::FloatRect CollisionComponent::getBounds() const
 {
-	return getTransform().transformRect(m_shape.getLocalBounds());
+	return getTransform().transformRect(m_shape.getGlobalBounds());
 }
