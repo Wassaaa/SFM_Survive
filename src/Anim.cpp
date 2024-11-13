@@ -4,8 +4,8 @@ Anim::Anim() :
 	frameDuration(sf::Time::Zero),
 	currentTime(sf::Time::Zero),
 	currentFrame(0),
-	isLooping(true),
-	isPlaying(false)
+	animLooping(true),
+	animPlaying(false)
 {
 }
 
@@ -13,8 +13,8 @@ Anim::Anim(sf::Time frameDuration, bool loop) :
 	frameDuration(frameDuration),
 	currentTime(sf::Time::Zero),
 	currentFrame(0),
-	isLooping(loop),
-	isPlaying(false)
+	animLooping(loop),
+	animPlaying(false)
 {
 }
 
@@ -29,7 +29,7 @@ void Anim::addFrame(const sf::IntRect &frame)
 
 bool Anim::update(float dt)
 {
-	if (!isPlaying)
+	if (!animPlaying)
 	{
 		return (false);
 	}
@@ -42,14 +42,14 @@ bool Anim::update(float dt)
 			++currentFrame;
 			return (true);
 		}
-		else if (isLooping)
+		else if (animLooping)
 		{
 			currentFrame = 0;
 			return (true);
 		}
 		else
 		{
-			isPlaying = false;
+			animPlaying = false;
 			return (false);
 		}
 	}

@@ -16,30 +16,66 @@ void AnimationComponent::addAnimation(EntityState state, const AnimationInfo& an
 		animations[state].addFrame(frame);
 	}
 	if (currentAnimation == EntityState::NOTHING)
-		playAnimation(state);
-
+	{
+		defaultAnimation = state;
+		playDefaultAnimation();
+	}
 }
 
-void AnimationComponent::playAnimation(EntityState anim)
+void AnimationComponent::playAnimation(EntityState newAnimation)
 {
-	if (animations.find(anim) == animations.end())
+	if (animations.find(newAnimation) == animations.end())
 		return;
-	if (currentAnimation == anim)
+	// Don't interrupt non-looping animations unless it's another non-looping (one-cycle) animation
+	if (currentAnimation != EntityState::NOTHING &&
+		!animations[currentAnimation].isLooping() &&
+		animations[currentAnimation].isPlaying() &&
+		animations[newAnimation].isLooping())
+	{
 		return;
-	if (currentAnimation != EntityState::NOTHING)
+	}
+	if (currentAnimation != newAnimation)
+	{
+		if (currentAnimation != EntityState::NOTHING)
 		animations[currentAnimation].stop();
-	currentAnimation = anim;
-	animations[anim].play();
-	m_visual.setTextureRect(animations[anim].getCurrentFrame());
+		// Store previous animation if current is non-looping (one-cycle)
+		if (!animations[currentAnimation].isLooping())
+			previousAnimation = currentAnimation;
+	}
+
+	currentAnimation = newAnimation;
+	animations[newAnimation].play();
+	m_visual.setTextureRect(animations[newAnimation].getCurrentFrame());
 }
 
 void AnimationComponent::update(float dt)
 {
-	if (currentAnimation != EntityState::NOTHING)
+	if (currentAnimation == EntityState::NOTHING)
 	{
-		if (animations[currentAnimation].update(dt))
-		{
-			m_visual.setTextureRect(animations[currentAnimation].getCurrentFrame());
-		}
+		playDefaultAnimation();
+		return;
 	}
+	if (animations[currentAnimation].update(dt))
+		m_visual.setTextureRect(animations[currentAnimation].getCurrentFrame());
+	else if (!animations[currentAnimation].isPlaying() && !animations[currentAnimation].isLooping())
+		onAnimationComplete();
+}
+
+void AnimationComponent::onAnimationComplete()
+{
+	if (previousAnimation != EntityState::NOTHING)
+	{
+		playAnimation(previousAnimation);
+		previousAnimation = EntityState::NOTHING;
+	}
+	else
+	{
+		playAnimation(EntityState::IDLE);
+	}
+}
+
+void AnimationComponent::playDefaultAnimation()
+{
+	if (defaultAnimation != EntityState::NOTHING)
+		playAnimation(defaultAnimation);
 }

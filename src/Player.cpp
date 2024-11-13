@@ -55,7 +55,8 @@ void Player::reset()
 	weapons.clear();
 }
 
-void Player::update(float& dt) {
+void Player::update(float& dt)
+{
 	updateDrag();
 	updateAnimation(dt);
 
@@ -87,7 +88,8 @@ void Player::updateAnimation(float &dt)
 	}
 }
 
-void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
 	// Draw visual component
 	if (auto* visual = getComponent<VisualComponent>())
 		target.draw(*visual, states);

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WeaponComponent.h"
 
 WeaponComponent::WeaponComponent(const WeaponComponentData& data) :
@@ -15,8 +16,10 @@ void WeaponComponent::update(float dt) {
 
 void WeaponComponent::addSpeed() {
 	currentSpeed += m_data.speedInterval;
+	std::cout << "Weapon Speed added\n";
 }
 
 void WeaponComponent::addRange() {
 	currentRange += m_data.rangeInterval.x;
+	std::cout << "Weapon Range added\n";
 }

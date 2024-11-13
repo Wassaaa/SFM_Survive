@@ -18,6 +18,7 @@ public:
 
 	void addAnimation(EntityState state, const AnimationInfo& animInfo);
 	void playAnimation(EntityState anim);
+	void playDefaultAnimation();
 	void update(float dt);
 
 	// inline getters
@@ -27,9 +28,13 @@ public:
 
 
 private:
+	void onAnimationComplete();
+
 	VisualComponent &m_visual;
 	std::unordered_map<EntityState, Anim> animations;
 	EntityState currentAnimation{EntityState::NOTHING};
+	EntityState previousAnimation{EntityState::NOTHING};
+	EntityState defaultAnimation{EntityState::NOTHING};
 };
 
 struct AnimationData : public Component
