@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <memory>
 #include "WeaponData.h"
-#include "EntData.h"
+#include "EntityData.h"
 
 class WeaponManager {
 

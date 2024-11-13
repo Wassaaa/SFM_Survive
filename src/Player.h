@@ -1,75 +1,66 @@
 #pragma once
 
+#include <memory>
+#include <unordered_map>
+#include <vector>
+
+#include <SFML/Graphics.hpp>
+
+#include "Weapon.h"
 #include "Game.h"
 #include "InputHandler.h"
-#include "AnimComponent.h"
-#include "EntManager.h"
-#include "States.h"
-#include "EntData.h"
-#include "Rectangle.h"
-#include "Weapon.h"
+#include "Types.h"
+#include "Components/ComponentContainer.h"
+#include "EntityManager.h"
 
-class Player : public Rectangle
+
+class Player : public ComponentContainer
 {
 public:
 	Player(Game *pGame);
-	~Player();
+	~Player() = default;
 
-	bool initialise();
-
-	//functions
 	void update(float &dt);
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void updatePhysics();
-	void updateMovement();
-	void updateAnim(float &dt);
-	void updateSprite();
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void reset();
+
 	//movement
-	void move(const float dir_x, const float dir_y);
-	void move(InputData inputData);
-	EntState determineState();
+	void updateDrag();
+	void move(const InputData& inputData);
+	EntityState determineState();
+
 	//weapons
 	void addWeapon(EntityType type);
-	//getters
-	const bool isDead() const { return m_isDead; }
 	std::vector<std::unique_ptr<Weapon>> &getWeapon() { return weapons; }
 
-	//setters
+	//states
+	const bool isDead() const { return m_isDead; }
 	void setIsDead(bool isDead) { m_isDead = isDead; }
 
+	// Position/Transform getters
+	sf::Vector2f getPosition() const;
+	sf::Vector2f getCenter() const;
+
+
 private:
-	sf::Texture textureSheet;
-	AnimComponent animations;
-	const EntityData *config;
+	//init functions
+	void initVariables();
+	void initComponents();
+	void initPhysics();
+
+	//update functions
+	void updateAnimation(float &dt);
+
 	Game* m_pGame;
-
-	//weapons
-	// std::vector<Weapon> weapons;
 	std::vector<std::unique_ptr<Weapon>> weapons;
-
-	//variables
-	sf::Vector2f playerOrigin;
-
-
-	//vars
-	float scale;
-	bool m_isDead;
-
-	//Movement
-	EntState currentState;
-	//Animation
+	bool m_isDead{false};
+	EntityState currentState{EntityState::IDLE};
+	sf::Vector2f velocity{0.f, 0.f};
 
 	//physics
-	sf::Vector2f velocity;
 	float velocityMax;
 	float velocityMin;
 	float acceleration;
 	float drag;
-
-
-	void initVariables();
-	void initSprite();
-	void initAnim();
-	void initPhysics();
 
 };

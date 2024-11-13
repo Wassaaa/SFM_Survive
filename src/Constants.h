@@ -1,16 +1,18 @@
 #pragma once
 
-const int ScreenWidth = 1600;
-const int ScreenHeight = 1200;
+namespace Constants {
+	// Screen
+	constexpr int SCREEN_WIDTH = 1600;
+	constexpr int SCREEN_HEIGHT = 1200;
 
-const float PlayerHeight = 55.0f;
-const float PlayerWidth = 55.0f;
-const float PlayerSpeed = 120.0f;
+	// Player
+	constexpr float PLAYER_SPEED_MAX = 400.0f;
+	constexpr float PLAYER_SPEED_MIN = 0.1f;
+	constexpr float PLAYER_ACCELERATION = 400.0f;
+	constexpr float PLAYER_DRAG = 400.0f;
 
-const float VampireHeight = 32.0f;
-const float VampireWidth = 32.0f;
-const float VampireSpeed = 100.0f;
-
-const float WeaponHeight = 10.0f;
-const float WeaponWidth = 100.0f;
-const float WeaponActiveTime = 0.25f;
+	// Vampire
+	constexpr float VAMPIRE_HEIGHT = 32.0f;
+	constexpr float VAMPIRE_WIDTH = 32.0f;
+	constexpr float VAMPIRE_SPEED = 100.0f;
+}

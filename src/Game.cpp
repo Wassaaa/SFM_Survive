@@ -12,7 +12,7 @@
 #include "Vampire.h"
 
 Game::Game() :
-    m_state(State::WAITING),
+    m_state(GameState::WAITING),
     m_pClock(std::make_unique<sf::Clock>()),
     m_pPlayer(std::make_unique<Player>(this)),
     m_vampireCooldown(2.0f),
@@ -61,7 +61,7 @@ void Game::resetLevel()
 {
     m_pVampires.clear();
 
-    m_pPlayer->initialise();
+    m_pPlayer->reset();
     m_pClock->restart();
     this->score = 0;
     this->extraWeapon = true;
@@ -71,18 +71,18 @@ void Game::update(float deltaTime)
 {
     switch (m_state)
     {
-        case State::WAITING:
+        case GameState::WAITING:
         {
             if (m_pClock->getElapsedTime().asSeconds() >= 3.f)
             {
-                m_state = State::ACTIVE;
+                m_state = GameState::ACTIVE;
                 m_pClock->restart();
                 m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
             }
         }
         break;
 
-        case State::ACTIVE:
+        case GameState::ACTIVE:
         {
             m_pGameInput->update(deltaTime);
             m_pPlayer->update(deltaTime);
@@ -95,7 +95,7 @@ void Game::update(float deltaTime)
 
             if (m_pPlayer->isDead())
             {
-                m_state = State::WAITING;
+                m_state = GameState::WAITING;
                 resetLevel();
             }
             if (m_pClock->getElapsedTime().asSeconds() >= 5.f && this->extraWeapon)
@@ -123,7 +123,7 @@ void Game::update(float deltaTime)
 void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     //  Draw texts.
-    if (m_state == State::WAITING)
+    if (m_state == GameState::WAITING)
     {
         sf::Text startText;
         startText.setFont(m_font);
@@ -141,7 +141,7 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
         timerText.setStyle(sf::Text::Bold);
         timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds()) +
                             "\nSCORE: " + std::to_string(this->score));
-        timerText.setPosition(sf::Vector2f((ScreenWidth - timerText.getLocalBounds().getSize().x) * 0.5, 20));
+        timerText.setPosition(sf::Vector2f((Constants::SCREEN_WIDTH - timerText.getLocalBounds().getSize().x) * 0.5, 20));
         target.draw(timerText);
     }
 
@@ -181,11 +181,11 @@ void Game::vampireSpawner(float deltaTime)
 
     for (int i = 0; i < vampiresPerFrame; ++i)
     {
-        float randomXPos = rand() % ScreenWidth;
-        float randomYPos = rand() % ScreenHeight;
+        float randomXPos = rand() % Constants::SCREEN_WIDTH;
+        float randomYPos = rand() % Constants::SCREEN_HEIGHT;
 
-        float distToRight = (float) ScreenWidth - randomXPos;
-        float distToBottom = (float) ScreenHeight - randomYPos;
+        float distToRight = (float) Constants::SCREEN_WIDTH - randomXPos;
+        float distToBottom = (float) Constants::SCREEN_HEIGHT - randomYPos;
 
         float xMinDist = randomXPos < distToRight ? -randomXPos : distToRight;
         float yMinDist = randomYPos < distToBottom ? -randomYPos : distToBottom;

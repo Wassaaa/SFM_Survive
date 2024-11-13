@@ -5,8 +5,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <memory>
 #include "Constants.h"
-#include "States.h"
-#include "EntData.h"
+#include "Types.h"
+#include "EntityData.h"
 
 class Player;
 class Game;
@@ -27,7 +27,7 @@ public:
     void resetLevel();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
-    State getState() const { return m_state; }
+    GameState getState() const { return m_state; }
 
     void onKeyPressed(sf::Keyboard::Key key);
     void onKeyReleased(sf::Keyboard::Key key);
@@ -47,7 +47,7 @@ private:
 
     std::vector<std::unique_ptr<Vampire>> m_pVampires;
 
-    State m_state;
+    GameState m_state;
     std::unique_ptr<sf::Clock> m_pClock;
     std::unique_ptr<GameInput> m_pGameInput;
 

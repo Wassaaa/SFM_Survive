@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
-#include "EntData.h"
-#include "States.h"
+#include "EntityData.h"
+#include "Types.h"
 
 class EntityManager
 {

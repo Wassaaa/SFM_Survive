@@ -3,11 +3,11 @@
 #include <memory>
 #include "Game.h"
 #include "Rectangle.h"
-#include "AnimComponent.h"
+#include "Components/AnimationComponent.h"
 #include "WeaponManager.h"
-#include "EntManager.h"
+#include "EntityManager.h"
 #include "WeaponData.h"
-#include "EntData.h"
+#include "EntityData.h"
 
 
 
@@ -38,7 +38,7 @@ private:
 	const EntityType type;
 	const WeaponData *data;
 	const EntityData *config;
-	AnimComponent animations;
+	AnimationComponent animations;
 
 	void getUpgrades(Game *pGame);
 	int lastUpgrade;

@@ -12,8 +12,9 @@ int main(int argc, char* argv[])
     // ResourceManager Must be Instantiated here -- DO NOT CHANGE
     ResourceManager::init(argv[0]);
 
-    sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "Survive");
+    sf::RenderWindow window(sf::VideoMode(Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT), "Survive");
     window.setKeyRepeatEnabled(false);
+    window.setFramerateLimit(60);
 
     std::unique_ptr<Game> pGame = std::make_unique<Game>();
     if (!pGame->initialise())

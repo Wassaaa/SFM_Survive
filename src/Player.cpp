@@ -1,178 +1,137 @@
+#include <array>
+
 #include "Player.h"
+#include "Game.h"
+#include "EntityManager.h"
+#include "Components/VisualComponent.h"
+#include "Components/CollisionComponent.h"
+#include "Components/AnimationComponent.h"
 
-Player::Player(Game *pGame) :
-	Rectangle(EntityManager::getInstance().getEntityData(EntityType::PLAYER).hitboxSize),
-	config(&EntityManager::getInstance().getEntityData(EntityType::PLAYER)),
-	m_pGame(pGame),
-	animations(m_sprite)
+Player::Player(Game* pGame) : m_pGame(pGame)
 {
-	this->initVariables();
-	this->initSprite();
-	this->initAnim();
-	this->initPhysics();
-}
-
-Player::~Player()
-{
-}
-
-bool Player::initialise()
-{
-	weapons.clear();
-	this->initVariables();
-	this->initSprite();
-	this->initPhysics();
-	this->currentState = EntState::IDLE;
-	return true;
-}
-
-void Player::update(float &dt)
-{
-	this->updateMovement();
-	this->updatePhysics();
-	this->updateSprite();
-	this->updateAnim(dt);
-	sf::Transformable::move(this->velocity * dt);
-	for (auto &weapon : this->weapons)
-	{
-		weapon->update(dt, this->getPosition(), m_pGame);
-	}
-}
-
-void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const
-{
-	Rectangle::draw(target, states);
-	for (auto& weapon : weapons)
-	{
-		weapon->draw(target, states);
-	}
-}
-
-void Player::updateMovement()
-{
-	EntState newState = this->determineState();
-	if (newState != currentState)
-	{
-		currentState = newState;
-		switch (currentState)
-		{
-		case EntState::IDLE:
-			animations.playAnimation(EntState::IDLE);
-			break;
-		case EntState::UP:
-			animations.playAnimation(EntState::UP);
-			break;
-		case EntState::RIGHT:
-			animations.playAnimation(EntState::RIGHT);
-			break;
-		case EntState::DOWN:
-			animations.playAnimation(EntState::DOWN);
-			break;
-		case EntState::LEFT:
-			animations.playAnimation(EntState::LEFT);
-			break;
-
-		default:
-			break;
-		}
-	}
-}
-
-void Player::updateAnim(float &dt)
-{
-	animations.update(dt);
-}
-
-void Player::updateSprite()
-{
-	m_sprite.setPosition(getPosition() + config->spriteOffset);
-	m_sprite.setRotation(getRotation() + config->spriteRotation);
-}
-
-void Player::updatePhysics()
-{
-	// deceleration
-	this->velocity *= this->drag;
-	// limit deceleration
-	if (std::abs(this->velocity.x) < this->velocityMin)
-		this->velocity.x = 0.f;
-	if (std::abs(this->velocity.y) < this->velocityMin)
-		this->velocity.y = 0.f;
-
-	setPosition(
-		std::clamp(getPosition().x, 0.0f, (float)ScreenWidth),
-		std::clamp(getPosition().y, 0.0f, (float)ScreenHeight)
-	);
-}
-
-void Player::move(const float dir_x, const float dir_y)
-{
-	// acceleration
-	this->velocity.x += dir_x * this->acceleration;
-	this->velocity.y += dir_y * this->acceleration;
-	// limit velocity
-	if (std::abs(this->velocity.x) > this->velocityMax)
-		this->velocity.x = this->velocityMax * ((this->velocity.x < 0) ?
-				-1.f : 1.f);
-	if (std::abs(this->velocity.y) > this->velocityMax)
-		this->velocity.y = this->velocityMax * ((this->velocity.y < 0) ?
-				-1.f : 1.f);
-}
-
-void Player::move(InputData inputData)
-{
-	float dir_x = 0.f;
-	float dir_y = 0.f;
-
-	if (inputData.m_movingLeft) dir_x -= 1.f;
-	if (inputData.m_movingRight) dir_x += 1.f;
-	if (inputData.m_movingUp) dir_y -= 1.f;
-	if (inputData.m_movingDown) dir_y += 1.f;
-	this->move(dir_x, dir_y);
-}
-
-EntState Player::determineState()
-{
-	if (this->velocity.y < 0.f)
-		return EntState::UP;
-	if (this->velocity.y > 0.f)
-		return EntState::DOWN;
-	if (this->velocity.x > 0.f)
-		return EntState::RIGHT;
-	if (this->velocity.x < 0.f)
-		return EntState::LEFT;
-	return EntState::IDLE;
-}
-
-void Player::addWeapon(EntityType type)
-{
-	this->weapons.emplace_back(std::make_unique<Weapon>(type));
+	initVariables();
+	initComponents();
 }
 
 void Player::initVariables()
 {
-	setOrigin(this->config->hitboxOrigin);
-	setScale(this->config->hitboxScale);
-	setPosition(ScreenWidth / 2, ScreenHeight / 2);
-	setRotation(this->config->hitboxRotation);
-	setIsDead(false);
-	this->currentState = EntState::NOTHING;
-	setDebugColor(this->config->debugColor);
+	this->acceleration = Constants::PLAYER_ACCELERATION;
+	this->velocityMax = Constants::PLAYER_SPEED_MAX;
+	this->velocityMin = Constants::PLAYER_SPEED_MIN;
+	this->drag = Constants::PLAYER_DRAG;
+	this->velocity = sf::Vector2f(0, 0);
+	this->m_isDead = false;
+	this->currentState = EntityState::IDLE;
 }
 
-void Player::initSprite()
+void Player::initComponents()
 {
-	this->m_sprite.setScale(this->config->spriteScale);
-	this->m_sprite.setOrigin(this->config->spriteOrigin);
-	this->m_sprite.setRotation(this->config->spriteRotation);
-	this->m_sprite.setPosition(getPosition());
+	const EntityData& entityData = EntityManager::getInstance().getEntityData(EntityType::PLAYER);
+
+	// Add components from entity data
+	if (auto *visual = entityData.getComponent<VisualComponent>())
+		addComponent<VisualComponent>(visual);
+	if (auto* collision = entityData.getComponent<CollisionComponent>())
+		addComponent<CollisionComponent>(collision);
+	if (auto* animData = entityData.getComponent<AnimationData>()) {
+		auto animComponent = std::make_shared<AnimationComponent>(getComponent<VisualComponent>());
+
+		// Load animations from animation data
+		for (const auto& [state, info] : animData->animations) {
+			animComponent->addAnimation(state, info);
+		}
+		components[typeid(AnimationComponent)] = animComponent;
+	}
 }
 
-void Player::initAnim()
+void Player::reset()
 {
-	if (!animations.loadTexture(this->config->texturePath))
-		std::cout << "ERROR::PLAYER::INIT_ANIM::LOAD_TEXTURE\n";
-	animations.addAnim(this->config->animations);
+	this->initVariables();
+
+	//hard-code to middle for now
+	if (auto* visual = getComponent<VisualComponent>())
+		visual->setPosition(Constants::SCREEN_WIDTH / 2.f, Constants::SCREEN_HEIGHT / 2.f);
+	if (auto* collision = getComponent<CollisionComponent>())
+		collision->setPosition(Constants::SCREEN_WIDTH / 2.f, Constants::SCREEN_HEIGHT / 2.f);
+
+	weapons.clear();
+}
+
+void Player::update(float &dt) {
+	updateDrag();
+	updateAnimation(dt);
+
+	sf::Vector2f movement = this->velocity * dt;
+	getComponent<VisualComponent>()->move(movement);
+	getComponent<CollisionComponent>()->move(movement);
+}
+
+void Player::updateAnimation(float &dt)
+{
+	if (auto* anim = getComponent<AnimationComponent>()) {
+		EntityState newState = determineState();
+		if (newState != currentState) {
+			currentState = newState;
+			anim->playAnimation(currentState);
+		}
+		anim->update(dt);
+	}
+}
+
+void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	// Draw visual component
+	if (auto* visual = getComponent<VisualComponent>())
+		target.draw(*visual, states);
+
+	// Draw collision debug if enableds
+	if (auto* collision = getComponent<CollisionComponent>()) {
+		target.draw(*collision, states);
+	}
+
+	// Draw weapons
+	for (const auto& weapon : weapons) {
+		weapon->draw(target, states);
+	}
+}
+
+void Player::updateDrag()
+{
+	// deceleration
+	this->velocity *= this->drag;
+	// set 0 if too low
+	if (std::abs(this->velocity.x) < this->velocityMin)
+		this->velocity.x = 0.f;
+	if (std::abs(this->velocity.y) < this->velocityMin)
+		this->velocity.y = 0.f;
+}
+
+void Player::move(const InputData &inputData)
+{
+	sf::Vector2f direction;
+	if (inputData.m_movingUp) direction.y = -1.f;
+	if (inputData.m_movingRight) direction.x = 1.f;
+	if (inputData.m_movingDown) direction.y = 1.f;
+	if (inputData.m_movingLeft) direction.x = -1.f;
+	//acceleration
+	this->velocity += (direction * this->acceleration);
+	//limit max
+	if (std::abs(this->velocity.x) > this->velocityMax)
+		this->velocity.x = this->velocityMax * ((this->velocity.x < 0) ? -1.f : 1.f);
+	if (std::abs(this->velocity.y) > this->velocityMax)
+		this->velocity.y = this->velocityMax * ((this->velocity.y < 0) ? -1.f : 1.f);
+}
+
+EntityState Player::determineState()
+{
+	if (this->velocity.y < 0.f)
+		return EntityState::MOVE_UP;
+	if (this->velocity.y > 0.f)
+		return EntityState::MOVE_DOWN;
+	if (this->velocity.x > 0.f)
+		return EntityState::MOVE_RIGHT;
+	if (this->velocity.x < 0.f)
+		return EntityState::MOVE_LEFT;
+	return EntityState::IDLE;
 }
 
 void Player::initPhysics()

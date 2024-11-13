@@ -9,8 +9,11 @@ Anim::Anim() :
 {
 }
 
-Anim::Anim(sf::Time frameDuration, bool loop) : frameDuration(frameDuration),
-	currentTime(sf::Time::Zero), currentFrame(0), isLooping(loop),
+Anim::Anim(sf::Time frameDuration, bool loop) :
+	frameDuration(frameDuration),
+	currentTime(sf::Time::Zero),
+	currentFrame(0),
+	isLooping(loop),
 	isPlaying(false)
 {
 }
