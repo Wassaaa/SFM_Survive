@@ -1,52 +1,25 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <memory>
-#include "Game.h"
-#include "Rectangle.h"
-#include "Components/AnimationComponent.h"
-#include "WeaponManager.h"
-#include "EntityManager.h"
-#include "WeaponData.h"
-#include "EntityData.h"
+#include "Components/ComponentContainer.h"
+#include "Types.h"
 
+class Game;
 
-
-class Weapon : public Rectangle
-{
+class Weapon : public ComponentContainer {
 public:
 	Weapon(EntityType type);
-	~Weapon();
+	~Weapon() = default;
 
-	void update(float& dt, sf::Vector2f playerPos, Game *pGame);
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void update(float dt, sf::Vector2f playerPos);
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	// Getters
-	float getDamage() const { return this->currentDamage; }
-	float getAttackSpeed() const { return this->currentSpeed; }
-	float getCritChance() const { return this->currentCritChance; }
-	float getCritDamage() const { return this->currentCritDamage; }
-	float getCurrentRange() const { return this->currentRange; }
-	const EntityType getType() const { return this->type; }
-
+	// Upgrade methods
 	void addSpeed();
 	void addRange();
-	void initStats();
-	void initSprite();
-	void initAnim();
+
+	EntityType getType() const { return m_type; }
 
 private:
-	const EntityType type;
-	const WeaponData *data;
-	const EntityData *config;
-	AnimationComponent animations;
+	void initComponents();
 
-	void getUpgrades(Game *pGame);
-	int lastUpgrade;
-
-	// Base stats
-	float currentDamage;
-	float currentSpeed;
-	float currentCritChance;
-	float currentCritDamage;
-	float currentRange;
+	const EntityType m_type;
 };

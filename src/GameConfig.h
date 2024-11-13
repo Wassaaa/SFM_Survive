@@ -31,15 +31,30 @@ struct AnimationInfo {
 	const bool loop;
 };
 
+struct WeaponComponentData {
+	const float baseDamage;
+	const float baseSpeed;
+	const float speedInterval;
+	const float baseRange;
+	const sf::Vector2f rangeInterval;
+	const float baseRadius;
+	const float baseCritChance;
+	const float baseCritDamage;
+	const float baseCD;
+	const float baseDuration;
+};
+
 
 struct EntityConfig {
 	const VisualComponentData visual;
 	const CollisionComponentData collision;
 	std::unordered_map<EntityState, AnimationInfo> animations;
+	const WeaponComponentData weapon;
 };
 
 namespace Config {
 	extern const EntityConfig PLAYER;
 	extern const EntityConfig LASER_WEAPON;
+	extern const EntityConfig VAMPIRE;
 	extern const std::unordered_map<EntityType, const EntityConfig&> ENTITY_CONFIGS;
 }

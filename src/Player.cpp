@@ -30,11 +30,11 @@ void Player::initComponents()
 
 	// Add components from entity data
 	if (auto *visual = entityData.getComponent<VisualComponent>())
-		addComponent<VisualComponent>(visual);
+		addComponent<VisualComponent>(*visual);
 	if (auto* collision = entityData.getComponent<CollisionComponent>())
-		addComponent<CollisionComponent>(collision);
+		addComponent<CollisionComponent>(*collision);
 	if (auto* animData = entityData.getComponent<AnimationData>()) {
-		auto animComponent = std::make_shared<AnimationComponent>(getComponent<VisualComponent>());
+		auto animComponent = std::make_shared<AnimationComponent>(*getComponent<VisualComponent>());
 
 		// Load animations from animation data
 		for (const auto& [state, info] : animData->animations) {
@@ -57,13 +57,24 @@ void Player::reset()
 	weapons.clear();
 }
 
-void Player::update(float &dt) {
+void Player::update(float& dt) {
 	updateDrag();
 	updateAnimation(dt);
 
 	sf::Vector2f movement = this->velocity * dt;
-	getComponent<VisualComponent>()->move(movement);
-	getComponent<CollisionComponent>()->move(movement);
+	if (auto* visual = getComponent<VisualComponent>()) {
+		visual->move(movement);
+
+		// Update weapons with player position
+		sf::Vector2f playerPos = visual->getPosition();
+		for (auto& weapon : weapons) {
+			weapon->update(dt, playerPos);
+		}
+	}
+
+	if (auto* collision = getComponent<CollisionComponent>()) {
+		collision->move(movement);
+	}
 }
 
 void Player::updateAnimation(float &dt)
@@ -132,6 +143,11 @@ EntityState Player::determineState()
 	if (this->velocity.x < 0.f)
 		return EntityState::MOVE_LEFT;
 	return EntityState::IDLE;
+}
+
+void Player::addWeapon(EntityType weaponType)
+{
+	weapons.emplace_back(std::make_unique<Weapon>(weaponType));
 }
 
 void Player::initPhysics()

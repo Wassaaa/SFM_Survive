@@ -1,21 +1,26 @@
 #pragma once
-
-#include "Rectangle.h"
+#include "Components/ComponentContainer.h"
+#include "Types.h"
+#include "Player.h"
 
 class Game;
+class Player;
 
-class Vampire : public Rectangle
+class Vampire : public ComponentContainer
 {
 public:
-    Vampire(Game* game, sf::Vector2f position);
-    virtual ~Vampire() {}
-    
-    void update(float deltaTime);
+	Vampire(Game* game, sf::Vector2f position);
+	~Vampire() = default;
 
-    void setIsKilled(bool isKilled) { m_isKilled = isKilled; }
-    bool isKilled() { return m_isKilled; }
+	void update(float deltaTime);
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	void setIsKilled(bool isKilled) { m_isKilled = isKilled; }
+	bool isKilled() const { return m_isKilled; }
 
 private:
-    Game* m_pGame;
-    bool m_isKilled = false;
+	void initComponents();
+
+	Game* m_pGame;
+	bool m_isKilled{false};
 };

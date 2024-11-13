@@ -30,7 +30,7 @@ public:
 	EntityState determineState();
 
 	//weapons
-	void addWeapon(EntityType type);
+	void addWeapon(EntityType weaponType);
 	std::vector<std::unique_ptr<Weapon>> &getWeapon() { return weapons; }
 
 	//states
@@ -62,5 +62,4 @@ private:
 	float velocityMin;
 	float acceleration;
 	float drag;
-
 };

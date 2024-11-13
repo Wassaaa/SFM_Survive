@@ -1,79 +1,65 @@
 #include "Weapon.h"
+#include "EntityManager.h"
+#include "Components/VisualComponent.h"
+#include "Components/CollisionComponent.h"
+#include "Components/AnimationComponent.h"
+#include "Components/WeaponComponent.h"
 
-Weapon::Weapon(EntityType type):
-	Rectangle(EntityManager::getInstance().getEntityData(type).hitboxSize),
-	type(type),
-	data(&WeaponManager::getInstance().getWeaponData(type)),
-	config(&EntityManager::getInstance().getEntityData(type)),
-	animations(m_sprite)
-{
-	this->initSprite();
-	this->initAnim();
-	this->initStats();
-	this->lastUpgrade = 0;
+Weapon::Weapon(EntityType type) : m_type(type) {
+	initComponents();
 }
 
-Weapon::~Weapon()
-{
+void Weapon::initComponents() {
+	const EntityData& entityData = EntityManager::getInstance().getEntityData(m_type);
+
+	if (auto* visual = entityData.getComponent<VisualComponent>())
+		addComponent<VisualComponent>(*visual);
+	if (auto* collision = entityData.getComponent<CollisionComponent>())
+		addComponent<CollisionComponent>(*collision);
+	if (auto* weapon = entityData.getComponent<WeaponComponent>())
+		addComponent<WeaponComponent>(*weapon);
+	if (auto* animData = entityData.getComponent<AnimationData>())
+	{
+		auto& animComp = addComponent<AnimationComponent>(*getComponent<VisualComponent>());
+		for (const auto& [state, info] : animData->animations)
+			animComp.addAnimation(state, info);
+	}
 }
 
-void Weapon::update(float &dt, sf::Vector2f playerPos, Game *pGame)
+void Weapon::update(float dt, sf::Vector2f playerPos)
 {
-	this->getUpgrades(pGame);
-	setPosition(playerPos);
-	rotate(this->currentSpeed * dt);
-
-	setPosition(getPosition());
-	setRotation(getRotation());
-	this->animations.update(dt);
+	if (auto weapon = getComponent<WeaponComponent>())
+	{
+		weapon->update(dt);
+		if (auto visual = getComponent<VisualComponent>())
+		{
+			visual->update(dt);
+			visual->setPosition(playerPos);
+			visual->setRotation(weapon->getRotation());
+		}
+		if (auto collision = getComponent<CollisionComponent>())
+		{
+			collision->setPosition(playerPos);
+			collision->setRotation(weapon->getRotation());
+		}
+	}
 }
 
 void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	Rectangle::draw(target, states);
+	if (auto visual = getComponent<VisualComponent>())
+		visual->draw(target, states);
+	if (auto collision = getComponent<CollisionComponent>())
+		collision->draw(target, states);
 }
 
 void Weapon::addSpeed()
 {
-	this->currentSpeed += this->data->speedInterval;
-	std::cout << "Weapon Speed increased\n";
+	if (auto weapon = getComponent<WeaponComponent>())
+		weapon->addSpeed();
 }
-
 void Weapon::addRange()
 {
-	setScale(getScale() + this->data->rangeInterval);
-	std::cout << "Weapon Range increased\n";
-}
-
-void Weapon::initStats()
-{
-	this->currentDamage = data->baseDamage;
-	this->currentSpeed = data->baseSpeed;
-	this->currentCritChance = data->baseCritChance;
-	this->currentCritDamage = data->baseCritDamage;
-	this->currentRange = data->baseRange;
-}
-
-void Weapon::initSprite()
-{
-	setOrigin(config->spriteOrigin);
-	setRotation(config->hitboxRotation);
-	setScale(config->spriteScale);
-}
-
-void Weapon::initAnim()
-{
-	this->animations.loadTexture(config->texturePath);
-	this->animations.addAnim(config->animations);
-}
-
-void Weapon::getUpgrades(Game *pGame)
-{
-	if (this->lastUpgrade == pGame->getScore())
-		return;
-	this->lastUpgrade = pGame->getScore();
-	if (pGame->getScore() % 2)
-		addSpeed();
-	if (pGame->getScore() % 3)
-		addRange();
+	if (auto weapon = getComponent<WeaponComponent>())
+	weapon->addRange();
 }

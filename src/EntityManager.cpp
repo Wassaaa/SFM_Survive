@@ -11,7 +11,7 @@ void EntityManager::loadEntityData()
 		EntityData& entity = entityData[type];
 		entity.addComponent<VisualComponent>(config.visual);
 		entity.addComponent<CollisionComponent>(config.collision);
-		auto &animComp = entity.addComponent<AnimationComponent>(entity.getComponent<VisualComponent>());
+		auto &animComp = entity.addComponent<AnimationComponent>(*entity.getComponent<VisualComponent>());
 		for (const auto& [state, info] : config.animations) {
 			animComp.addAnimation(state, info);
 		}

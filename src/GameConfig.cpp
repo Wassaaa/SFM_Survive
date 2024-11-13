@@ -1,8 +1,10 @@
 #include "GameConfig.h"
 
-namespace Config {
+namespace Config
+{
 	// Player Configuration
-	const EntityConfig PLAYER = {
+	const EntityConfig PLAYER =
+	{
 		// Visual Component
 		{
 			"soldier.png",         // filename
@@ -42,8 +44,42 @@ namespace Config {
 		}
 	};
 
+	const EntityConfig VAMPIRE =
+	{
+		// Visual Component
+		{
+			"vampire.png",         // filename
+			{16.f, 16.f},         // frameSize
+			{2.f, 2.f},           // scale
+			{8.f, 8.f},         // origin
+			{0.f, 0.f},           // offset
+			0.f                    // rotation
+		},
+		// Collision Component
+		{
+			{16.f, 16.f},         // size
+			{2.f, 2.f},           // scale
+			{8.f, 8.f},         // origin
+			{0.f, 0.f},           // offset
+			0.f,                   // rotation
+			{255, 0, 0, 128}      // debugColor
+		},
+		// Animations
+		{
+			{EntityState::IDLE, {
+				"vampire.png",
+				{32, 32},
+				{0, 0},
+				1,
+				sf::milliseconds(100),
+				true
+			}}
+		}
+};
+
 	// Weapon Configurations
-	const EntityConfig LASER_WEAPON = {
+	const EntityConfig LASER_WEAPON =
+	{
 		// Visual Component
 		{
 			"waveform2.png",
@@ -72,12 +108,26 @@ namespace Config {
 				sf::milliseconds(100),
 				true
 			}}
-		}
+		},
+		// Weapon Component
+		{
+			8.f,    // baseDamage
+			100.f,  // baseSpeed
+			5.f,    // speedInterval
+			95.f,   // baseRange
+			{0.1f, 0.f}, // rangeInterval
+			5.f,    // baseRadius
+			0.05f,  // baseCritChance
+			1.5f,   // baseCritDamage
+			0.f,    // baseCD
+			0.2f    // baseDuration
+		},
 	};
 
 	// Map to access configurations
 	const std::unordered_map<EntityType, const EntityConfig&> ENTITY_CONFIGS = {
 		{EntityType::PLAYER, PLAYER},
-		{EntityType::LASER_WEAPON, LASER_WEAPON}
+		{EntityType::LASER_WEAPON, LASER_WEAPON},
+		{EntityType::VAMPIRE, VAMPIRE}
 	};
 }
