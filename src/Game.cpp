@@ -37,21 +37,6 @@ bool Game::initialise()
         std::cerr << "Unable to load font" << std::endl;
         return false;
     }
-    if (!m_vampTexture.loadFromFile(ResourceManager::getFilePath("vampire.png")))
-    {
-        std::cerr << "Unable to load texture" << std::endl;
-        return false;
-    }
-    if (!m_playerTexture.loadFromFile(ResourceManager::getFilePath("soldier.png")))
-    {
-        std::cerr << "Unable to load texture" << std::endl;
-        return false;
-    }
-    if (!m_weaponTexture.loadFromFile(ResourceManager::getFilePath("waveform2.png")))
-    {
-        std::cerr << "Unable to load texture" << std::endl;
-        return false;
-    }
 
     resetLevel();
     return true;

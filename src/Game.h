@@ -35,10 +35,6 @@ public:
     Player* getPlayer() const;
     const int getScore() const { return this->score; }
 
-    sf::Texture* getPlayerTexture() { return &m_playerTexture; }
-    sf::Texture* getVampireTexture() { return &m_vampTexture; }
-    sf::Texture* getWeaponTexture() { return &m_weaponTexture; }
-
     void vampireSpawner(float deltaTime);
     void addKill();
 
@@ -59,7 +55,4 @@ private:
     int vampiresPerFrame = 1;
 
     sf::Font m_font;
-    sf::Texture m_vampTexture;
-    sf::Texture m_playerTexture;
-    sf::Texture m_weaponTexture;
 };
