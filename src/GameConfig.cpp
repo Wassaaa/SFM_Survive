@@ -8,7 +8,6 @@ namespace Config
 		// Visual Component
 		{
 			"soldier.png",         // filename
-			{100.f, 100.f},       // frameSize
 			{3.f, 3.f},           // scale
 			{50.f, 50.f},         // origin
 			{0.f, 0.f},           // offset
@@ -25,22 +24,26 @@ namespace Config
 		},
 		// Animations
 		{
-			{EntityState::IDLE, {
-				"soldier.png",
-				{100, 100},
-				{0, 0},
-				6,
-				sf::milliseconds(100),
-				true
-			}},
-			{EntityState::MOVE_RIGHT, {
-				"soldier.png",
-				{100, 100},
-				{0, 0},
-				6,
-				sf::milliseconds(100),
-				true
-			}}
+			{
+				EntityState::IDLE,
+				{
+					{100, 100},
+					{0, 0},
+					6,
+					sf::milliseconds(100),
+					true
+				}
+			},
+			{
+				EntityState::MOVE_RIGHT,
+				{
+					{100, 100},
+					{0, 1},
+					8,
+					sf::milliseconds(100),
+					true
+				}
+			}
 		}
 	};
 
@@ -49,7 +52,6 @@ namespace Config
 		// Visual Component
 		{
 			"vampire.png",         // filename
-			{16.f, 16.f},         // frameSize
 			{2.f, 2.f},           // scale
 			{8.f, 8.f},         // origin
 			{0.f, 0.f},           // offset
@@ -66,14 +68,16 @@ namespace Config
 		},
 		// Animations
 		{
-			{EntityState::IDLE, {
-				"vampire.png",
-				{32, 32},
-				{0, 0},
-				1,
-				sf::milliseconds(100),
-				true
-			}}
+			{
+				EntityState::IDLE,
+				{
+					{16, 16},
+					{0, 0},
+					1,
+					sf::milliseconds(100),
+					true
+				}
+			}
 		}
 };
 
@@ -83,7 +87,6 @@ namespace Config
 		// Visual Component
 		{
 			"waveform2.png",
-			{95.f, 32.f},
 			{1.0f, 1.0f},
 			{0.f, 15.f},
 			{0.f, 0.f},
@@ -100,14 +103,16 @@ namespace Config
 		},
 		// Animations
 		{
-			{EntityState::WEAPON_1, {
-				"waveform2.png",
-				{95, 32},
-				{0, 0},
-				1,
-				sf::milliseconds(100),
-				true
-			}}
+			{
+				EntityState::WEAPON_1,
+				{
+					{95, 32},
+					{0, 0},
+					1,
+					sf::milliseconds(100),
+					true
+				}
+			}
 		},
 		// Weapon Component
 		std::make_optional<WeaponComponentData>(

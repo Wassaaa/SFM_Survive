@@ -10,7 +10,8 @@
 #include "Component.h"
 #include "VisualComponent.h"
 
-class AnimationComponent : public Component {
+class AnimationComponent : public Component
+{
 public:
 	AnimationComponent(VisualComponent &visual);
 	~AnimationComponent() = default;

@@ -7,7 +7,6 @@
 // Data structures for component configurations
 struct VisualComponentData {
 	const std::string filename;
-	const sf::Vector2f frameSize;
 	const sf::Vector2f scale;
 	const sf::Vector2f origin;
 	const sf::Vector2f offset;
@@ -24,7 +23,6 @@ struct CollisionComponentData {
 };
 
 struct AnimationInfo {
-	const std::string texturePath;
 	const sf::Vector2i frameSize;
 	const sf::Vector2i startPos;
 	const size_t frameCount;
