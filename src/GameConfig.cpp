@@ -43,6 +43,36 @@ namespace Config
 					sf::milliseconds(100),
 					true
 				}
+			},
+			{
+				EntityState::MOVE_LEFT,
+				{
+					{100, 100},
+					{0, 1},
+					8,
+					sf::milliseconds(100),
+					true
+				}
+			},
+			{
+				EntityState::MOVE_UP,
+				{
+					{100, 100},
+					{0, 1},
+					8,
+					sf::milliseconds(100),
+					true
+				}
+			},
+			{
+				EntityState::MOVE_DOWN,
+				{
+					{100, 100},
+					{0, 1},
+					8,
+					sf::milliseconds(100),
+					true
+				}
 			}
 		}
 	};

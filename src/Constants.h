@@ -9,7 +9,7 @@ namespace Constants {
 
 	// Player
 	constexpr float PLAYER_SPEED_MAX = 400.0f;
-	constexpr float PLAYER_SPEED_MIN = 0.1f;
+	constexpr float PLAYER_SPEED_MIN = 3.1f;
 	constexpr float PLAYER_ACCELERATION = 100.0f;
 	constexpr float PLAYER_DRAG = 0.72f;
 

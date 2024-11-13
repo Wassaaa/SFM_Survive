@@ -16,25 +16,21 @@ void AnimationComponent::addAnimation(EntityState state, const AnimationInfo& an
 		animations[state].addFrame(frame);
 	}
 	if (currentAnimation == EntityState::NOTHING)
-	{
-		currentAnimation = state;
-		m_visual.setTextureRect(animations[state].getCurrentFrame());
-	}
+		playAnimation(state);
 
 }
 
 void AnimationComponent::playAnimation(EntityState anim)
 {
-	if (currentAnimation != anim)
-	{
-		if (this->currentAnimation != anim)
-		{
-			animations[this->currentAnimation].stop();
-			this->currentAnimation = anim;
-		}
-		animations[anim].play();
-		m_visual.setTextureRect(animations[anim].getCurrentFrame());
-	}
+	if (animations.find(anim) == animations.end())
+		return;
+	if (currentAnimation == anim)
+		return;
+	if (currentAnimation != EntityState::NOTHING)
+		animations[currentAnimation].stop();
+	currentAnimation = anim;
+	animations[anim].play();
+	m_visual.setTextureRect(animations[anim].getCurrentFrame());
 }
 
 void AnimationComponent::update(float dt)

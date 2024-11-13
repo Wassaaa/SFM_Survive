@@ -40,4 +40,5 @@ struct AnimationData : public Component
 	{
 		animations.try_emplace(state, info);
 	}
+	virtual const char* getName() const override { return "AnimationData"; }
 };
