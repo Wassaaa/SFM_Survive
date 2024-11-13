@@ -1,9 +1,11 @@
 #include "CollisionComponent.h"
+#include "../Constants.h"
 
 CollisionComponent::CollisionComponent(const CollisionComponentData& data) : m_data(data)
 {
 	initShape();
 	applyTransforms();
+	this->setDebugDraw(Constants::DEBUG_DRAW);
 }
 
 void CollisionComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const

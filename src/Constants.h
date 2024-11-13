@@ -1,6 +1,8 @@
 #pragma once
 
 namespace Constants {
+	// Debug
+	constexpr int DEBUG_DRAW = true;
 	// Screen
 	constexpr int SCREEN_WIDTH = 1600;
 	constexpr int SCREEN_HEIGHT = 1200;
