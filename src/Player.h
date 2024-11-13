@@ -11,7 +11,7 @@
 #include "InputHandler.h"
 #include "Types.h"
 #include "Components/ComponentContainer.h"
-#include "EntityManager.h"
+#include "Config/EntityManager.h"
 
 
 class Player : public ComponentContainer

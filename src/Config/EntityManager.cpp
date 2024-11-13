@@ -1,9 +1,9 @@
 #include "EntityManager.h"
 #include "GameConfig.h"
-#include "Components/VisualComponent.h"
-#include "Components/CollisionComponent.h"
-#include "Components/AnimationComponent.h"
-#include "Components/WeaponComponent.h"
+#include "../Components/VisualComponent.h"
+#include "../Components/CollisionComponent.h"
+#include "../Components/AnimationComponent.h"
+#include "../Components/WeaponComponent.h"
 
 void EntityManager::loadEntityData()
 {

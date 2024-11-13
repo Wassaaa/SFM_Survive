@@ -6,9 +6,7 @@
 
 #include "ResourceManager.h"
 #include "InputHandler.h"
-#include "Weapon.h"
 #include "Player.h"
-#include "Rectangle.h"
 #include "Vampire.h"
 
 Game::Game() :

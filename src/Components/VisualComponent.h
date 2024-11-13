@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Component.h"
-#include "../GameConfig.h"
+#include "../Config/GameConfig.h"
 
 class VisualComponent : public Component, public sf::Drawable, public sf::Transformable
 {

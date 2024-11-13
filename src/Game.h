@@ -6,7 +6,6 @@
 #include <memory>
 #include "Constants.h"
 #include "Types.h"
-#include "EntityData.h"
 
 class Player;
 class Game;

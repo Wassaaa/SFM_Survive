@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "../GameConfig.h"
+#include "../Config/GameConfig.h"
 #include <SFML/Graphics.hpp>
 
 class CollisionComponent : public Component, public sf::Drawable, public sf::Transformable

@@ -6,7 +6,7 @@
 
 #include "../Anim.h"
 #include "../Types.h"
-#include "../GameConfig.h"
+#include "../Config/GameConfig.h"
 #include "Component.h"
 #include "VisualComponent.h"
 

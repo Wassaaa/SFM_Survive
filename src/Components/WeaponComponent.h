@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "../GameConfig.h"
+#include "../Config/GameConfig.h"
 
 class WeaponComponent : public Component
 {

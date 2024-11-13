@@ -1,5 +1,5 @@
 #include "Weapon.h"
-#include "EntityManager.h"
+#include "Config/EntityManager.h"
 #include "Components/VisualComponent.h"
 #include "Components/CollisionComponent.h"
 #include "Components/AnimationComponent.h"
