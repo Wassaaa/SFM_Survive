@@ -3,6 +3,7 @@
 #include "Components/VisualComponent.h"
 #include "Components/CollisionComponent.h"
 #include "Components/AnimationComponent.h"
+#include "Components/WeaponComponent.h"
 
 void EntityManager::loadEntityData()
 {
@@ -15,6 +16,8 @@ void EntityManager::loadEntityData()
 		for (const auto& [state, info] : config.animations) {
 			animComp.addAnimation(state, info);
 		}
+		if (config.weapon.has_value())
+			entity.addComponent<WeaponComponent>(config.weapon.value());
 	}
 }
 

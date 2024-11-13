@@ -33,14 +33,12 @@ void Player::initComponents()
 		addComponent<VisualComponent>(*visual);
 	if (auto* collision = entityData.getComponent<CollisionComponent>())
 		addComponent<CollisionComponent>(*collision);
-	if (auto* animData = entityData.getComponent<AnimationData>()) {
-		auto animComponent = std::make_shared<AnimationComponent>(*getComponent<VisualComponent>());
-
+	if (auto* animData = entityData.getComponent<AnimationData>())
+	{
+		auto& animComponent = addComponent<AnimationComponent>(*getComponent<VisualComponent>());
 		// Load animations from animation data
-		for (const auto& [state, info] : animData->animations) {
-			animComponent->addAnimation(state, info);
-		}
-		components[typeid(AnimationComponent)] = animComponent;
+		for (const auto& [state, info] : animData->animations)
+			animComponent.addAnimation(state, info);
 	}
 }
 
@@ -148,13 +146,4 @@ EntityState Player::determineState()
 void Player::addWeapon(EntityType weaponType)
 {
 	weapons.emplace_back(std::make_unique<Weapon>(weaponType));
-}
-
-void Player::initPhysics()
-{
-	this->velocityMax = 400.f;
-	this->velocityMin = .1f;
-	this->acceleration = 100.f;
-	this->drag = 0.72f;
-	this->velocity = {0.f, 0.f};
 }

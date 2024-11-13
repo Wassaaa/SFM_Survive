@@ -5,6 +5,7 @@
 VisualComponent::VisualComponent(const VisualComponentData &data) : m_data(data)
 {
 	this->loadTexture();
+	this->applyTransforms();
 }
 
 void VisualComponent::draw(sf::RenderTarget &target, sf::RenderStates states) const

@@ -20,9 +20,10 @@ void Weapon::initComponents() {
 		addComponent<WeaponComponent>(*weapon);
 	if (auto* animData = entityData.getComponent<AnimationData>())
 	{
-		auto& animComp = addComponent<AnimationComponent>(*getComponent<VisualComponent>());
+		auto& animComponent = addComponent<AnimationComponent>(*getComponent<VisualComponent>());
+		// Load animations from animation data
 		for (const auto& [state, info] : animData->animations)
-			animComp.addAnimation(state, info);
+			animComponent.addAnimation(state, info);
 	}
 }
 

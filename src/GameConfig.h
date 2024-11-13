@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include "Types.h"
+#include <optional>
 
 // Data structures for component configurations
 struct VisualComponentData {
@@ -49,7 +50,7 @@ struct EntityConfig {
 	const VisualComponentData visual;
 	const CollisionComponentData collision;
 	std::unordered_map<EntityState, AnimationInfo> animations;
-	const WeaponComponentData weapon;
+	const std::optional<WeaponComponentData> weapon;
 };
 
 namespace Config {

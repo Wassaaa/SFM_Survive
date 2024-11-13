@@ -46,7 +46,6 @@ private:
 	//init functions
 	void initVariables();
 	void initComponents();
-	void initPhysics();
 
 	//update functions
 	void updateAnimation(float &dt);

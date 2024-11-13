@@ -110,6 +110,7 @@ namespace Config
 			}}
 		},
 		// Weapon Component
+		std::make_optional<WeaponComponentData>(
 		{
 			8.f,    // baseDamage
 			100.f,  // baseSpeed
@@ -121,7 +122,7 @@ namespace Config
 			1.5f,   // baseCritDamage
 			0.f,    // baseCD
 			0.2f    // baseDuration
-		},
+		}),
 	};
 
 	// Map to access configurations
