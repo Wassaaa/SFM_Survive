@@ -8,6 +8,7 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       flake-utils,
     }:
@@ -19,27 +20,32 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            # 1. Core build tools
-            cmake # The build system generator, as required by the README
-            pkg-config # Helps build tools find libraries
-            gcc # A C++ compiler (you could also use `clang`)
-            gdb # The GNU Debugger, very useful for C++
+            # Core build tools
+            cmake
+            pkg-config
+            gcc
+            gdb
 
-            # 2. SFML Dependencies (translated from the README's apt list)
-            # These are for windowing, graphics, and input via X11 (using XWayland)
-            xorg.libX11
-            xorg.libXrandr
-            xorg.libXcursor
+            # SFML Dependencies
+
+            # Audio
+            flac
+            libvorbis
+            openalSoft
+
+            # Graphics & Windowing
+            freetype
+            glew
+            libjpeg
+            mesa
             udev
 
-            # General media and font libraries
-            freetype
-            openalSoft # For audio
-            libvorbis # For .ogg audio format
-            flac # For .flac audio format
-
-            # Graphics libraries
-            mesa # Provides OpenGL drivers (libGL, libEGL)
+            # X11 Libraries
+            xorg.libX11
+            xorg.libXcursor
+            xorg.libXrandr
+            xorg.libXrender
+            xorg.xcbutilimage
           ];
           shellHook = ''
             echo "SFML development environment loaded."
