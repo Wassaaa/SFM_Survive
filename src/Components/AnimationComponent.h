@@ -40,6 +40,7 @@ private:
 
     VisualComponent &m_visual;
     std::unordered_map<EntityState, Anim> animations;
+    std::unordered_map<EntityState, bool> animationFlipX;
     EntityState currentAnimation{EntityState::NOTHING};
     EntityState previousAnimation{EntityState::NOTHING};
     EntityState defaultAnimation{EntityState::NOTHING};

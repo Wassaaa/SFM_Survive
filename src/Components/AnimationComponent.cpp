@@ -7,6 +7,7 @@ AnimationComponent::AnimationComponent(VisualComponent &visual)
 void AnimationComponent::addAnimation(EntityState state, const AnimationInfo &animInfo)
 {
     animations.try_emplace(state, animInfo.frameDuration, animInfo.loop);
+    animationFlipX[state] = animInfo.flipX;
     for (size_t i = 0; i < animInfo.frameCount; i++) {
         sf::IntRect frame(animInfo.startPos.x + i * animInfo.frameSize.x,
                           animInfo.startPos.y * animInfo.frameSize.y, animInfo.frameSize.x,
@@ -38,6 +39,19 @@ void AnimationComponent::playAnimation(EntityState newAnimation)
 
     currentAnimation = newAnimation;
     animations[newAnimation].play();
+
+    // Apply horizontal flip if needed
+    // Special case: IDLE preserves the current facing direction
+    sf::Vector2f currentScale = m_visual.getScale();
+    if (newAnimation != EntityState::IDLE) {
+        bool shouldFlip = animationFlipX[newAnimation];
+        if (shouldFlip && currentScale.x > 0) {
+            m_visual.setScale(-currentScale.x, currentScale.y);
+        } else if (!shouldFlip && currentScale.x < 0) {
+            m_visual.setScale(-currentScale.x, currentScale.y);
+        }
+    }
+
     m_visual.setTextureRect(animations[newAnimation].getCurrentFrame());
 }
 
