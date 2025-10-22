@@ -14,22 +14,24 @@ struct InputData
     bool m_space = false;
     bool m_spaceReleased = true;
 
-    bool hasInputs() { return m_movingUp || m_movingDown || m_movingLeft || m_movingRight || m_space;}
+    bool hasInputs()
+    {
+        return m_movingUp || m_movingDown || m_movingLeft || m_movingRight || m_space;
+    }
 };
 
 class GameInput
 {
 public:
-    GameInput(Game* pGame, Player* pPlayer);
+    GameInput(Game *pGame, Player *pPlayer);
     ~GameInput();
-    
+
     void update(float deltaTime);
     void onKeyPressed(sf::Keyboard::Key key);
     void onKeyReleased(sf::Keyboard::Key key);
-    
-    
+
 private:
     InputData m_inputData;
-    Game* m_pGame;
-    Player* m_pPlayer;
+    Game *m_pGame;
+    Player *m_pPlayer;
 };

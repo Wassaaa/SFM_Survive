@@ -9,18 +9,24 @@ class Player;
 class Vampire : public ComponentContainer
 {
 public:
-	Vampire(Game* game, sf::Vector2f position);
-	~Vampire() = default;
+    Vampire(Game *game, sf::Vector2f position);
+    ~Vampire() = default;
 
-	void update(float deltaTime);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void update(float deltaTime);
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
-	void setIsKilled(bool isKilled) { m_isKilled = isKilled; }
-	bool isKilled() const { return m_isKilled; }
+    void setIsKilled(bool isKilled)
+    {
+        m_isKilled = isKilled;
+    }
+    bool isKilled() const
+    {
+        return m_isKilled;
+    }
 
 private:
-	void initComponents();
+    void initComponents();
 
-	Game* m_pGame;
-	bool m_isKilled{false};
+    Game *m_pGame;
+    bool m_isKilled{false};
 };

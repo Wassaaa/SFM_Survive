@@ -12,12 +12,13 @@ class Game;
 class GameInput;
 class Vampire;
 
-namespace sf { class Clock; }
+namespace sf {
+    class Clock;
+}
 
 class Game : public sf::Drawable
 {
 public:
-
     Game();
     ~Game();
 
@@ -26,13 +27,19 @@ public:
     void resetLevel();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
-    GameState getState() const { return m_state; }
+    GameState getState() const
+    {
+        return m_state;
+    }
 
     void onKeyPressed(sf::Keyboard::Key key);
     void onKeyReleased(sf::Keyboard::Key key);
 
-    Player* getPlayer() const;
-    const int getScore() const { return this->score; }
+    Player *getPlayer() const;
+    const int getScore() const
+    {
+        return this->score;
+    }
 
     void vampireSpawner(float deltaTime);
     void addKill();

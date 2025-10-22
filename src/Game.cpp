@@ -9,19 +9,18 @@
 #include "Player.h"
 #include "Vampire.h"
 
-Game::Game() :
-    m_state(GameState::WAITING),
-    m_pClock(std::make_unique<sf::Clock>()),
-    m_pPlayer(std::make_unique<Player>(this)),
-    m_vampireCooldown(2.0f),
-    m_nextVampireCooldown(2.0f)
+Game::Game()
+    : m_state(GameState::WAITING)
+    , m_pClock(std::make_unique<sf::Clock>())
+    , m_pPlayer(std::make_unique<Player>(this))
+    , m_vampireCooldown(2.0f)
+    , m_nextVampireCooldown(2.0f)
 {
     m_pGameInput = std::make_unique<GameInput>(this, m_pPlayer.get());
 }
 
 Game::~Game()
-{
-}
+{}
 
 bool Game::initialise()
 {
@@ -30,8 +29,7 @@ bool Game::initialise()
             If you want to load any assets (fonts, textures) please use the pattern shown below
     */
 
-    if (!m_font.loadFromFile(ResourceManager::getFilePath("Lavigne.ttf")))
-    {
+    if (!m_font.loadFromFile(ResourceManager::getFilePath("Lavigne.ttf"))) {
         std::cerr << "Unable to load font" << std::endl;
         return false;
     }
@@ -52,49 +50,38 @@ void Game::resetLevel()
 
 void Game::update(float deltaTime)
 {
-    switch (m_state)
-    {
-        case GameState::WAITING:
-        {
-            if (m_pClock->getElapsedTime().asSeconds() >= 3.f)
-            {
-                m_state = GameState::ACTIVE;
-                m_pClock->restart();
-                m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
-            }
+    switch (m_state) {
+    case GameState::WAITING: {
+        if (m_pClock->getElapsedTime().asSeconds() >= 3.f) {
+            m_state = GameState::ACTIVE;
+            m_pClock->restart();
+            m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
         }
-        break;
+    } break;
 
-        case GameState::ACTIVE:
-        {
-            m_pGameInput->update(deltaTime);
-            m_pPlayer->update(deltaTime);
+    case GameState::ACTIVE: {
+        m_pGameInput->update(deltaTime);
+        m_pPlayer->update(deltaTime);
 
-            vampireSpawner(deltaTime);
-            for (auto& temp : m_pVampires)
-            {
-                temp->update(deltaTime);
-            }
-
-            if (m_pPlayer->isDead())
-            {
-                m_state = GameState::WAITING;
-                resetLevel();
-            }
-            if (m_pClock->getElapsedTime().asSeconds() >= 5.f && this->extraWeapon)
-            {
-                m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
-                this->extraWeapon = false;
-            }
+        vampireSpawner(deltaTime);
+        for (auto &temp : m_pVampires) {
+            temp->update(deltaTime);
         }
-        break;
+
+        if (m_pPlayer->isDead()) {
+            m_state = GameState::WAITING;
+            resetLevel();
+        }
+        if (m_pClock->getElapsedTime().asSeconds() >= 5.f && this->extraWeapon) {
+            m_pPlayer->addWeapon(EntityType::LASER_WEAPON);
+            this->extraWeapon = false;
+        }
+    } break;
     }
 
     int i = 0;
-    while (i < m_pVampires.size())
-    {
-        if (m_pVampires[i]->isKilled())
-        {
+    while (i < m_pVampires.size()) {
+        if (m_pVampires[i]->isKilled()) {
             std::swap(m_pVampires[i], m_pVampires.back());
             m_pVampires.pop_back();
             continue;
@@ -106,8 +93,7 @@ void Game::update(float deltaTime)
 void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     //  Draw texts.
-    if (m_state == GameState::WAITING)
-    {
+    if (m_state == GameState::WAITING) {
         sf::Text startText;
         startText.setFont(m_font);
         startText.setString("Game Start!");
@@ -116,15 +102,15 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
         startText.setStyle(sf::Text::Bold);
         target.draw(startText);
     }
-    else
-    {
+    else {
         sf::Text timerText;
         timerText.setFont(m_font);
         timerText.setFillColor(sf::Color::White);
         timerText.setStyle(sf::Text::Bold);
         timerText.setString(std::to_string((int)m_pClock->getElapsedTime().asSeconds()) +
                             "\nSCORE: " + std::to_string(this->score));
-        timerText.setPosition(sf::Vector2f((Constants::SCREEN_WIDTH - timerText.getLocalBounds().getSize().x) * 0.5, 20));
+        timerText.setPosition(sf::Vector2f(
+            (Constants::SCREEN_WIDTH - timerText.getLocalBounds().getSize().x) * 0.5, 20));
         target.draw(timerText);
     }
 
@@ -132,12 +118,10 @@ void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
     m_pPlayer->draw(target, states);
 
     //  Draw world.
-    for (auto& temp : m_pVampires)
-    {
+    for (auto &temp : m_pVampires) {
         temp->draw(target, states);
     }
 }
-
 
 void Game::onKeyPressed(sf::Keyboard::Key key)
 {
@@ -156,19 +140,17 @@ Player *Game::getPlayer() const
 
 void Game::vampireSpawner(float deltaTime)
 {
-    if (m_vampireCooldown > 0.0f)
-    {
+    if (m_vampireCooldown > 0.0f) {
         m_vampireCooldown -= deltaTime;
         return;
     }
 
-    for (int i = 0; i < vampiresPerFrame; ++i)
-    {
+    for (int i = 0; i < vampiresPerFrame; ++i) {
         float randomXPos = rand() % Constants::SCREEN_WIDTH;
         float randomYPos = rand() % Constants::SCREEN_HEIGHT;
 
-        float distToRight = (float) Constants::SCREEN_WIDTH - randomXPos;
-        float distToBottom = (float) Constants::SCREEN_HEIGHT - randomYPos;
+        float distToRight = (float)Constants::SCREEN_WIDTH - randomXPos;
+        float distToBottom = (float)Constants::SCREEN_HEIGHT - randomYPos;
 
         float xMinDist = randomXPos < distToRight ? -randomXPos : distToRight;
         float yMinDist = randomYPos < distToBottom ? -randomYPos : distToBottom;
@@ -184,11 +166,9 @@ void Game::vampireSpawner(float deltaTime)
 
     std::cout << "Spawned " << vampiresPerFrame << " vampires." << std::endl;
     m_spawnCount++;
-    if (m_spawnCount % 5 == 0)
-    {
+    if (m_spawnCount % 5 == 0) {
         m_nextVampireCooldown -= 0.1f;
-        if (m_nextVampireCooldown <= 0.0f)
-        {
+        if (m_nextVampireCooldown <= 0.0f) {
             m_nextVampireCooldown = 0.0f;
             vampiresPerFrame++;
         }
@@ -199,10 +179,8 @@ void Game::vampireSpawner(float deltaTime)
 void Game::addKill()
 {
     this->score++;
-    if (this->score % 2 == 0)
-    {
-        for (auto& weapon : m_pPlayer->getWeapon())
-        {
+    if (this->score % 2 == 0) {
+        for (auto &weapon : m_pPlayer->getWeapon()) {
             if (weapon->getType() == EntityType::LASER_WEAPON)
                 weapon->addSpeed();
         }

@@ -7,44 +7,41 @@
 
 #include "ResourceManager.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     // ResourceManager Must be Instantiated here -- DO NOT CHANGE
     ResourceManager::init(argv[0]);
 
-    sf::RenderWindow window(sf::VideoMode(Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT), "Survive");
+    sf::RenderWindow window(sf::VideoMode(Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT),
+                            "Survive");
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
 
     std::unique_ptr<Game> pGame = std::make_unique<Game>();
-    if (!pGame->initialise())
-    {
+    if (!pGame->initialise()) {
         std::cerr << "Game Failed to initialise" << std::endl;
         return 1;
     }
 
     sf::Clock clock;
     // run the program as long as the window is open
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            switch(event.type)
-            {
-                case sf::Event::Closed:
-                    // "close requested" event: we close the window
-                    window.close();
-                    break;
-                case sf::Event::KeyPressed:
-                    pGame->onKeyPressed(event.key.code);
-                    break;
-                case sf::Event::KeyReleased:
-                    pGame->onKeyReleased(event.key.code);
-                    break;
-                default:
-                    break;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                // "close requested" event: we close the window
+                window.close();
+                break;
+            case sf::Event::KeyPressed:
+                pGame->onKeyPressed(event.key.code);
+                break;
+            case sf::Event::KeyReleased:
+                pGame->onKeyReleased(event.key.code);
+                break;
+            default:
+                break;
             }
         }
         pGame->update(clock.restart().asSeconds());

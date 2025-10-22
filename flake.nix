@@ -25,6 +25,7 @@
             pkg-config
             gcc
             gdb
+            clang
 
             # SFML Dependencies
 
