@@ -50,6 +50,9 @@ void Game::resetLevel()
 
 void Game::update(float deltaTime)
 {
+    // Cap deltaTime to prevent huge jumps
+    deltaTime = std::min(deltaTime, 0.1f);
+
     switch (m_state) {
     case GameState::WAITING: {
         if (m_pClock->getElapsedTime().asSeconds() >= 3.f) {
