@@ -24,6 +24,12 @@ add_executable(survive ${SOURCES})
 target_link_libraries(survive PRIVATE sfml-graphics sfml-audio sfml-network)
 target_compile_features(survive PRIVATE cxx_std_17)
 
+# Enable debug symbols and disable optimizations for Debug builds
+target_compile_options(survive PRIVATE
+    $<$<CONFIG:Debug>:-g -O0>
+    $<$<CONFIG:Release>:-O3>
+)
+
 add_custom_command(
     TARGET survive
     COMMENT "Copy assets directory"
