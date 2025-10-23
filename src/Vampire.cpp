@@ -42,8 +42,9 @@ void Vampire::update(float deltaTime)
     for (auto &weapon : pPlayer->getWeapon()) {
         if (getComponent<CollisionComponent>()->intersects(
                 *weapon->getComponent<CollisionComponent>())) {
-            setIsKilled(true);
+            m_pGame->markVampireForDeletion(this);
             m_pGame->addKill();
+            setIsKilled(true);
             return;
         }
     }

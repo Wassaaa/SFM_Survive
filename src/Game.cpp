@@ -79,15 +79,7 @@ void Game::update(float deltaTime)
     } break;
     }
 
-    int i = 0;
-    while (i < m_pVampires.size()) {
-        if (m_pVampires[i]->isKilled()) {
-            std::swap(m_pVampires[i], m_pVampires.back());
-            m_pVampires.pop_back();
-            continue;
-        }
-        i++;
-    }
+    processDeletions();
 }
 
 void Game::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -185,4 +177,26 @@ void Game::addKill()
                 weapon->addSpeed();
         }
     }
+}
+
+void Game::markVampireForDeletion(Vampire *vampire)
+{
+    m_vampiresToDelete.insert(vampire);
+}
+
+void Game::processDeletions()
+{
+    if (m_vampiresToDelete.empty())
+        return;
+
+    // Erase-remove: remove_if moves matching elements to end, erase deletes them
+    auto isMarkedForDeletion = [this](const std::unique_ptr<Vampire> &vampire) {
+        return m_vampiresToDelete.find(vampire.get()) != m_vampiresToDelete.end();
+    };
+
+    auto newEnd = std::remove_if(m_pVampires.begin(), m_pVampires.end(), isMarkedForDeletion);
+    // Actually delete the elements from newEnd to the actual end
+    m_pVampires.erase(newEnd, m_pVampires.end());
+
+    m_vampiresToDelete.clear();
 }

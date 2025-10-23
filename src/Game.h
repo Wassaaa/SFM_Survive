@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <memory>
+#include <unordered_set>
 #include "Constants.h"
 #include "Types.h"
 
@@ -43,11 +44,15 @@ public:
 
     void vampireSpawner(float deltaTime);
     void addKill();
+    void markVampireForDeletion(Vampire *vampire);
 
 private:
+    void processDeletions();
+
     std::unique_ptr<Player> m_pPlayer;
 
     std::vector<std::unique_ptr<Vampire>> m_pVampires;
+    std::unordered_set<Vampire *> m_vampiresToDelete;
 
     GameState m_state;
     std::unique_ptr<sf::Clock> m_pClock;
